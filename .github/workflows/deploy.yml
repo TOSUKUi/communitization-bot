@@ -8,8 +8,8 @@ env:
   DOCKER_IMAGE_NAME: communitization-bot
   DOCKER_IMAGE_TAG: latest
   DOCKERFILE_PATH: Dockerfile
-  GITHUB_USERNAME: ${{ secrets.USER_NAME }}
-  GITHUB_TOKEN: ${{ secrets.TOKEN }}
+  GITHUB_USERNAME: ${{ secrets.GITHUB_USERNAME }}
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
   build-and-push:
@@ -22,8 +22,8 @@ jobs:
       uses: docker/login-action@v1
       with:
         registry: docker.pkg.github.com
-        username: ${{ env.USERNAME }}
-        password: ${{ env.TOKEN }}
+        username: ${{ env.GITHUB_USERNAME }}
+        password: ${{ env.GITHUB_TOKEN }}
 
     - name: Build Docker image
       run: docker build -t $DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG -f $DOCKERFILE_PATH .
