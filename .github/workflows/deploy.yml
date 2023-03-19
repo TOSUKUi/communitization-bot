@@ -1,0 +1,35 @@
+name: Build and Push Docker image to GitHub Package
+
+on:
+  push:
+    branches: [main]
+
+env:
+  DOCKER_IMAGE_NAME: communitization-bot
+  DOCKER_IMAGE_TAG: latest
+  DOCKERFILE_PATH: Dockerfile
+  GITHUB_USERNAME: ${{ secrets.USER_NAME }}
+  GITHUB_TOKEN: ${{ secrets.TOKEN }}
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Configure Docker CLI
+      uses: docker/login-action@v1
+      with:
+        registry: docker.pkg.github.com
+        username: ${{ env.USERNAME }}
+        password: ${{ env.TOKEN }}
+
+    - name: Build Docker image
+      run: docker build -t $DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG -f $DOCKERFILE_PATH .
+
+    - name: Tag Docker image
+      run: docker tag $DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG docker.pkg.github.com/${{ env.GITHUB_USERNAME }}/${{ env.REPO_NAME }}/$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG
+
+    - name: Push Docker image
+      run: docker push docker.pkg.github.com/${{ env.GITHUB_USERNAME }}/${{ env.REPO_NAME }}/$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG
