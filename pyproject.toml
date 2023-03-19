@@ -10,7 +10,6 @@ packages = [{include = "communitization_bot"}]
 [tool.poetry.dependencies]
 python = "^3.9"
 openai = "^0.27.2"
-pyyaml = "^6.0"
 discord = "^2.2.2"
 
 
