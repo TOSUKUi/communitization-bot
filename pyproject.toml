@@ -5,7 +5,7 @@ description = ""
 authors = ["TOSUKUi"]
 license = "MIT"
 readme = "README.md"
-packages = [{include = "communitization_bot"}]
+packages = [{include = "communitization-bot"}]
 
 [tool.poetry.dependencies]
 python = "^3.9"
