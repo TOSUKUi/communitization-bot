@@ -8,8 +8,8 @@ env:
   DOCKER_IMAGE_NAME: communitization-bot
   DOCKER_IMAGE_TAG: latest
   DOCKERFILE_PATH: Dockerfile
-  GITHUB_USERNAME: ${{ secrets.GITHUB_USERNAME }}
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  GITHUB_USERNAME: ${{ secrets.USER_NAME }}
+  GITHUB_TOKEN: ${{ secrets.TOKEN }}
 
 jobs:
   build-and-push:
