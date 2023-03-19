@@ -1,37 +1,50 @@
-name: Build and Push Docker image to GitHub Package
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
 
-on: [push]
+# GitHub recommends pinning actions to a commit SHA.
+# To get a newer version, you will need to update the SHA.
+# You can also reference a tag or branch, but the action may change without warning.
+
+name: Create and publish a Docker image
+
+on:
+  push:
+    branches: ['release', 'ci-cd-settings']
 
 env:
-  DOCKER_IMAGE_NAME: communitization-bot
-  DOCKER_IMAGE_TAG: latest
-  DOCKERFILE_PATH: Dockerfile
-  GITHUB_USERNAME: ${{ github.actor }}
-  GITHUB_TOKEN: ${{ secrets.TOKEN }}
-  REPOSITORY_NAME: ${{ github.repository }}
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-  build-and-push:
+  build-and-push-image:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    - name: Configure Docker CLI
-      uses: docker/login-action@v1
-      with:
-        registry: docker.pkg.github.com
-        username: ${{ env.GITHUB_USERNAME }}
-        password: ${{ env.GITHUB_TOKEN }}
+      - name: Log in to the Container registry
+        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: downcase GITHUB_USERNAME
-      run: echo "USERNAME=${GITHUB_USERNAME,,}" >>${GITHUB_ENV}
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
-    - name: Build Docker image
-      run: docker build -t ghcr.io/$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG -f $DOCKERFILE_PATH .
-
-    - name: Tag Docker image
-      run: docker tag ghcr.io/$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG ${{ env.USERNAME }}/$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG
-
-    - name: Push Docker image
-      run: docker push ghcr.io/${{ env.USERNAME }}/$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG
+      - name: Build and push Docker image
+        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
