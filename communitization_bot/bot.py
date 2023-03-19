@@ -4,7 +4,7 @@ import yaml
 import discord
 import os
 from discord.ext import commands
-import src.ai as ai
+from . import ai
 
 intents = discord.Intents.default()
 intents.message_content = True
