@@ -13,7 +13,7 @@ DISCORD_BOT_TOKEN
 OPENAPI_API_KEY
 ```
 
-2. go ahead(I haven't make sure it go right. But I trust human possibility.)
+2.  install and run
 ```
 git clone https://github.com/TOSUKUi/communitization-bot
 cd communitization-bot
