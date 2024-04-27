@@ -9,12 +9,14 @@ packages = [{include = "communitization_bot"}]
 
 [tool.poetry.dependencies]
 python = "^3.9"
-openai = "^0.27.2"
+openai = "^1.23.6"
 discord = "^2.2.2"
+python-dotenv = "^1.0.1"
+
 
 
 [tool.poetry.group.dev.dependencies]
-ruff = "^0.0.257"
+ruff = "^0.4.2"
 
 [build-system]
 requires = ["poetry-core"]
